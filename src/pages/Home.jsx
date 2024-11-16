@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import CardPizza from '../components/CardPizza';
+import CardPizza from "../components/CardPizza";
 import { pizzas } from "../assets/pizzas";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 
@@ -20,18 +20,16 @@ function Home() {
     console.log(data);
   };
 
-  
   const mapPizzas = info.map((pizza) => {
-      return (
-          <Col key={pizza.id} >
-              <CardPizza pizza={pizza} />
-          </Col>
-      )
-  })
+    return (
+      <Col key={pizza.id}>
+        <CardPizza pizza={pizza} />
+      </Col>
+    );
+  });
   // console.log(mapPizzas);
   return (
     <div>
-
       <Container>
         <Row className="g-4" xs={1} md={2} lg={4}>
           {mapPizzas}

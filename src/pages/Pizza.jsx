@@ -1,46 +1,45 @@
 import React, { useEffect, useState } from "react";
-import CardPizza from "../components/CardPizza";
-import Header from "../components/Header";
-import { Col, Container, Row } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
 
 function Pizza() {
-  const [info, setInfo] = useState([]);
+  const { id } = useParams(); 
+  const [pizza, setPizza] = useState(null);
 
   useEffect(() => {
-    infoPizzasAppi();
-  },[]);
+    const fetchPizza = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/pizzas/${id}`); 
+        const data = await response.json();
+        setPizza(data);
+      } catch (error) {
+        console.error("Error fetching pizza data:", error);
+      }
+    };
 
-  const infoPizzasAppi = async () => {
-    const url = "http://localhost:5000/api/pizzas/p001";
-    const response = await fetch(url);
-    const data = await response.json();
-    setInfo(data);
+    fetchPizza();
+  }, [id]);
 
-    
-  };
+  if (!pizza) {
+    return <div>Loading...</div>;
+  }
 
-  const mapPizzas = Array.isArray(info) ? info.map((pizza) => {
-    return (
-      <Col key={pizza.id}>
-        <CardPizza pizza={pizza} />
-      </Col>
-    );
-  }) : (
-    <Col key={info.id}>
-      <CardPizza pizza={info} />
-    </Col>
-  );
-  
-  
   return (
-    <div>
-
-      <Container>
-        <Row className="g-4" xs={1} md={2} lg={4}>
-          {mapPizzas}
-        </Row>
-      </Container>
-    </div>
+    <Container>
+      <Row>
+        <Col>
+          <h1>{pizza.name}</h1>
+          <img src={pizza.img} alt={pizza.name} className="img-fluid" />
+          <p>{pizza.desc}</p>
+          <ul>
+            {pizza.ingredients.map((ingredient) => (
+              <li key={ingredient}>{ingredient}</li>
+            ))}
+          </ul>
+          <p><strong>Precio:</strong> ${pizza.price}</p>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

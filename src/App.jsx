@@ -10,31 +10,51 @@ import { Route, Routes } from "react-router-dom";
 import Profile from "./components/Profile";
 import Header from "./components/Header";
 import NotFound from "./components/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
+import RedirectIfAuthenticated from "./components/RedirectIfAuthenticated";
 
 function App() {
   return (
     <>
       <Navbar />
       <Header />
-      {/* <Home /> */}
-      {/* <Cart /> */}
-      {/* <RegisterPage /> */}
-      {/* <Profile /> */}
-      {/* <Login /> */}
-      {/* <Pizza /> */}
-
+      
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/registerPage" element={<RegisterPage />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/pizza" element={<Pizza />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/pizza/:id" element={<Pizza />} />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/registerPage"
+          element={
+            <RedirectIfAuthenticated>
+              <RegisterPage />
+            </RedirectIfAuthenticated>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <RedirectIfAuthenticated>
+              <Login />
+            </RedirectIfAuthenticated>
+          }
+        />
+
         <Route path="/NotFound" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Footer />
 
+      <Footer />
     </>
   );
 }

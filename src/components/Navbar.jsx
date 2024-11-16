@@ -2,31 +2,35 @@ import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { FaPizzaSlice, FaLock, FaSignOutAlt, FaSignInAlt, FaUserPlus, FaShoppingCart } from 'react-icons/fa';
 import { Link } from "react-router-dom";
+import { useCart } from '../context/CartContext';
+import { useUser } from '../context/UserContext';
 
 const NavigationBar = () => {
-    const total = 25000;
-    const token = false;
+    const { totalCompra } = useCart(); 
+    const { token, logout } = useUser();
+
     return (
         <Navbar bg="dark" variant="dark" expand="lg">
-            <Navbar.Brand >
+            <Navbar.Brand>
                 <FaPizzaSlice /> Pizzería Mamma Mía
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
+                    {/* Botón Home (siempre visible) */}
                     <Nav.Link as={Link} to="/">
                         Home
-                    </Nav.Link>
-                    <Nav.Link as={Link} to="/registerPage">
-                        <FaUserPlus /> Register
                     </Nav.Link>
 
                     {token ? (
                         <>
-                            <Nav.Link href="#profile">
+                            <Nav.Link as={Link} to="/profile">
                                 <FaLock /> Profile
                             </Nav.Link>
-                            <Nav.Link href="#logout">
+                            <Nav.Link
+                                onClick={logout} 
+                                style={{ cursor: 'pointer' }}
+                            >
                                 <FaSignOutAlt /> Logout
                             </Nav.Link>
                         </>
@@ -35,19 +39,15 @@ const NavigationBar = () => {
                             <Nav.Link as={Link} to="/login">
                                 <FaSignInAlt /> Login
                             </Nav.Link>
-
-
+                            <Nav.Link as={Link} to="/registerPage">
+                                <FaUserPlus /> Register
+                            </Nav.Link>
                         </>
                     )}
 
                     <Nav.Link as={Link} to="/cart">
-                        <FaShoppingCart /> Total: ${total.toLocaleString()}
+                        <FaShoppingCart /> Total: ${totalCompra.toLocaleString()}
                     </Nav.Link>
-
-                    <Nav.Link as={Link} to="/Profile">
-                        <FaUserPlus /> Profile
-                    </Nav.Link>
-
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
